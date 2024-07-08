@@ -21,7 +21,7 @@ pipeline {
         stage('Packaging/Pushing imagae') {
 
             steps {
-                sh 'sudo snap set system homedirs=${env.WORKSPACE}'
+                sh "sudo snap set system homedirs=${env.WORKSPACE}"
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t khaliddinh/springboot .'
                     sh 'docker push khaliddinh/springboot'
