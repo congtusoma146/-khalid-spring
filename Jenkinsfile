@@ -1,15 +1,13 @@
 pipeline {
-
     agent any
 
-    tools { 
-        maven 'my-maven' 
+    tools {
+        maven 'my-maven'
     }
     environment {
         MYSQL_ROOT_LOGIN = credentials('mysql-root-login')
     }
     stages {
-
         stage('Build with Maven') {
             steps {
                 sh 'mvn --version'
@@ -19,13 +17,16 @@ pipeline {
         }
 
         stage('Packaging/Pushing imagae') {
-
             steps {
-                
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
                     sh 'docker build -t khaliddinh/springboot .'
                     sh 'docker push khaliddinh/springboot'
                 }
+            // withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+            //     sh 'docker build -t khaliddinh/springboot .'
+            //     sh 'docker push khaliddinh/springboot'
+            // }
             }
         }
 
@@ -55,7 +56,6 @@ pipeline {
                 sh 'docker container run -d --rm --name khalid-springboot -p 8081:8080 --network dev khaliddinh/springboot'
             }
         }
- 
     }
     post {
         // Clean after build
