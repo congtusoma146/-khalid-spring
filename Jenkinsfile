@@ -18,7 +18,7 @@ pipeline {
         stage('sync')
         {
             steps{
-                sh "sudo cp ${env.WORKSPACE} /home/jenkins"
+                sh "sudo cp -R ${env.WORKSPACE} /home/jenkins"
             }
         }
         stage('Packaging/Pushing imagae') {
