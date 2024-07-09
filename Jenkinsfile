@@ -18,14 +18,14 @@ pipeline {
         stage('sync')
         {
             steps{
-                sh "sudo cp -R ${env.WORKSPACE} /home/jenkins"
+                // sh "sudo cp -R ${env.WORKSPACE} /home/jenkins"
             }
         }
         stage('Packaging/Pushing imagae') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-                    sh 'docker build -t khaliddinh/springboot .'
+                    sh "docker build -t khaliddinh/springboot -f /home/jenkins/Dockerfile ."
                     sh 'docker push khaliddinh/springboot'
                 }
             // withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
