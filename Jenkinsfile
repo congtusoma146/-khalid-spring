@@ -15,12 +15,12 @@ pipeline {
                 sh 'mvn clean package -Dmaven.test.failure.ignore=true'
             }
         }
-        stage('sync')
-        {
-            steps{
-                // sh "sudo cp -R ${env.WORKSPACE} /home/jenkins"
-            }
-        }
+        // stage('sync')
+        // {
+        //     steps{
+        //         // sh "sudo cp -R ${env.WORKSPACE} /home/jenkins"
+        //     }
+        // }
         stage('Packaging/Pushing imagae') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
